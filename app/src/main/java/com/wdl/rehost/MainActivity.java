@@ -54,10 +54,15 @@ public class MainActivity extends AppCompatActivity {
                     PluginInfo info = RePlugin.install(getExternalCacheDir().getAbsolutePath() + "/plugin1.apk");
                     if (info != null) {
                         RePlugin.preload(info);
-                        Toast.makeText(mContext, "success install", Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(mContext, "install fail", Toast.LENGTH_LONG).show();
                     }
+                    runOnUiThread(() -> {
+                        if (info != null) {
+                            Toast.makeText(mContext, "success install", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(mContext, "install fail", Toast.LENGTH_LONG).show();
+                        }
+                    });
+
                     pd.dismiss();
                 }
             }, 1000);
@@ -84,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void download() {
         Log.i("MainActivity", "download: " + getExternalCacheDir().getAbsolutePath());
+        progressBar.setProgress(0);
         FileUtils.downLoadFile(furl, getExternalCacheDir().getAbsolutePath(), new FileUtils.ReqProgressCallBack() {
             @Override
             public void onProgress(long total, long current) {
